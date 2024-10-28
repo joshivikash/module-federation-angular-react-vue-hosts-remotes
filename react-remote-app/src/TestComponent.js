@@ -16,3 +16,4 @@ class TestComponentElement extends HTMLElement {
 }
 
 customElements.define("react-remote-test-component-element", TestComponentElement);
+export {TestComponentElement};
