@@ -1,5 +1,5 @@
 import { loadRemoteModule } from '@angular-architects/module-federation';
-import { Component, ElementRef, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, Injector, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -13,21 +13,74 @@ export class AppComponent {
   @ViewChild('reactElementRef', { read: ElementRef, static: true })
   reactElementRef!: ElementRef;
 
-  // use a view container to instantiate the remote angular component
-  @ViewChild('angularViewContainerRef', { read: ViewContainerRef })
-  angularViewContainerRef!: ViewContainerRef;
+  // use a view container to instantiate the remote angular app
+  @ViewChild('angularRemoteAppViewContainerRef', { read: ViewContainerRef })
+  angularRemoteAppViewContainerRef!: ViewContainerRef;
+
+  // to render the angular app web component
+  @ViewChild('angularRemoteAppElementRef', { static: true })
+  angularRemoteAppElementRef!: ElementRef;
+
+  // use a view container to instantiate the remote angular app
+  @ViewChild('angularRemoteComponentViewContainerRef', { read: ViewContainerRef })
+  angularRemoteComponentViewContainerRef!: ViewContainerRef;
+
+  // to render the angular app web component
+  @ViewChild('angularRemoteComponentElementRef', { static: true })
+  angularRemoteComponentElementRef!: ElementRef;
 
   // to render the vue web component
   @ViewChild("vueElementRef", { static: true })
   vueElementRef!: ElementRef;
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2, private injector: Injector) {
 
   }
 
   async loadAngular(): Promise<void> {
-    const m = await import('angularRemoteApp/TestComponent');
-    const ref = this.angularViewContainerRef.createComponent(m.TestComponent);
+    // 3 ways to load remote angular module
+    // 1. using import function and web component
+     const appModule = await import('angularRemoteApp/AppModule');
+     console.log('appModule',new appModule.AppModule(this.injector));
+      const appWebComponentElement = document.createElement('angular-app-component');
+      this.angularRemoteAppElementRef.nativeElement.appendChild(appWebComponentElement);
+
+    // 2. using import function and the component factory
+    // const appModule = await import('angularRemoteApp/AppComponent');
+    // const ref = this.angularRemoteAppViewContainerRef.createComponent(appModule.AppComponent);
+
+    // 3. using loadRemoteModule
+    // const remoteAngular = await loadRemoteModule({
+    //   remoteEntry: 'http://localhost:3001/remoteEntry.js',
+    //   remoteName: 'angularRemoteApp',
+    //   exposedModule: './AppModule',
+    // });
+    // console.log('remoteAngular', new remoteAngular.AppModule(this.injector));
+    // const appWebComponentElement = document.createElement('angular-app-component');
+    // this.angularRemoteAppElementRef.nativeElement.appendChild(appWebComponentElement);
+
+
+// The following code is for loading the TestModule from the remote angular app in the above mentioned 3 ways
+    // 1. using import function and web component
+  //  const componentModule = await import('angularRemoteApp/TestModule');
+  //  console.log('componentModule',new componentModule.TestModule(this.injector));
+  //   const webComponentElement = document.createElement('angular-test-component');
+  //   this.angularRemoteComponentElementRef.nativeElement.appendChild(webComponentElement);
+
+  // 2. using import function and the component factory
+    const componentModule = await import('angularRemoteApp/TestComponent');
+    const ref = this.angularRemoteComponentViewContainerRef.createComponent(componentModule.TestComponent);
+
+// 3. using loadRemoteModule
+    // const remoteAngular = await loadRemoteModule({
+    //   remoteEntry: 'http://localhost:3001/remoteEntry.js',
+    //   remoteName: 'angularRemoteApp',
+    //   exposedModule: './TestModule',
+    // });
+    // console.log('remoteAngular', new remoteAngular.TestModule(this.injector));
+    // const webComponentElement = document.createElement('angular-test-component');
+    // this.angularRemoteComponentElementRef.nativeElement.appendChild(webComponentElement);
+
   }
 
   async loadReact(): Promise<void> {

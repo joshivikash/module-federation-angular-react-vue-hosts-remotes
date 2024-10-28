@@ -31,7 +31,10 @@ module.exports = {
       filename: "remoteEntry.js",
       exposes: {
         "./TestComponent": "./src/app/test/test.component.ts", // component
+        "./AppComponent": "./src/app/app.component.ts", // component
         './angularRemoteApp': './src/loadApp.ts', // app
+        './TestModule': './src/app/test/test.module.ts', // app
+        './AppModule': './src/app/app.module.ts', // app
       },
 
       shared: share({
