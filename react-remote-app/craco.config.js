@@ -30,12 +30,15 @@ module.exports = {
                         },
                     }
                   }),
-                ] 
+                ];
                 return webpackConfig;
               },
               overrideDevServerConfig: ({ devServerConfig, cracoConfig, pluginOptions, context: { env, paths, proxy, allowedHost } }) => { return devServerConfig; },
               overrideJestConfig: ({ jestConfig, cracoConfig, pluginOptions, context: { env, paths, resolve, rootDir } }) => { return jestConfig },
           },
       }
-  ]
+  ],
+  devServer: {
+    port: 3002, // Specify your desired port here
+  },
 };
