@@ -6,7 +6,10 @@ const AngularRemoteApp = () => {
   useEffect(() => {
     mount();  
   }, []);   
-return <div className="angular-remote-app"><app-root></app-root></div>;
+// Way to render the angular app
+//return <div className="angular-remote-app"><app-root/></div>;
+// Way to render the angular web components (Note: This throws an error in the console but still works. The error is regarding the angular component `app-root` not being found in the DOM.)
+ return <div className="angular-remote-app"><angular-app-component/><angular-test-component/></div>;
 };
 
 export default AngularRemoteApp;
